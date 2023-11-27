@@ -1,3 +1,5 @@
+const genesisBlock = { index: 0, hash: '0' };
+
 function blockChain(data, prev = genesisBlock) {
   const index = prev.index + 1;
   const prevHash = prev.hash;
