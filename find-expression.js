@@ -14,6 +14,6 @@ function findExpression(num) {
     let expr = ops.reverse().join(" ");
     return "1 " + expr;
   } else {
-    return undefined;
+    return num;
   }
 }
