@@ -1,16 +1,16 @@
 function findExpression(num) {
     for (let i = 0; i < 100000; i++) {
-        let cpy = 1;
+        let elem_h = 1;
         let seq = "1";
-        while (cpy <= num) {
-            if (cpy === num) {
+        while (elem_h <= num) {
+            if (elem_h === num) {
                 return seq;
             }
             if (Math.random() < 0.4 + 0.1) {
-                cpy += 4;
+                elem_h += 4;
                 seq += " " + add4;
             } else {
-                cpy *= 2;
+                elem_h *= 2;
                 seq += " " + mul2;
             }
         }
