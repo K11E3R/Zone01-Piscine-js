@@ -1,19 +1,21 @@
-function findExpression(number) {
-  let result = 1;
-  let expression = "";
+const add4 = (x) => x + 4;
+const mul2 = (x) => x * 2;
 
-  while (result < number) {
-    if ((result + 4) <= number) {
-      result += 4;
-      expression += "+4 ";
+function findExpression(num) {
+  let ops = [];
+  let val = num;
+  while (val > 1 && val >= 0) {
+    if (val % 2 === 0) {
+      val = val / 2;
+      ops.push("*2");
     } else {
-      result = 2;
-      expression += "2 ";
+      val = val - 4;
+      ops.push("+4");
     }
   }
-
-  if (result === number) {
-    return expression.trim();
+  if (val === 1) {
+    let expr = ops.reverse().join(" ");
+    return "1 " + expr;
   } else {
     return undefined;
   }
