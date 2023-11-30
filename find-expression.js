@@ -1,16 +1,13 @@
-const add4 = (x) => x + 4;
-const mul2 = (x) => x * 2;
-
 function findExpression(num) {
   let ops = [];
   let val = num;
   while (val > 1 && val >= 0) {
     if (val % 2 === 0) {
       val = val / 2;
-      ops.push("*2");
+      ops.push(mul2);
     } else {
       val = val - 4;
-      ops.push("+4");
+      ops.push(add4);
     }
   }
   if (val === 1) {
