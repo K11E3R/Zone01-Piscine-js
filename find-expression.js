@@ -1,19 +1,19 @@
 function findExpression(num) {
-  let ops = [];
-  let val = num;
-  while (val > 1 && val >= 0) {
-    if (val % 2 === 0) {
-      val = val / 2;
-      ops.push(mul2);
-    } else {
-      val = val - 4;
-      ops.push(add4);
+    for (let i = 0; i < 100000; i++) {
+        let cpy = 1;
+        let seq = "1";
+        while (cpy <= num) {
+            if (cpy === num) {
+                return seq;
+            }
+            if (Math.random() < 0.4 + 0.1) {
+                cpy += 4;
+                seq += " " + add4;
+            } else {
+                cpy *= 2;
+                seq += " " + mul2;
+            }
+        }
     }
-  }
-  if (val === 1) {
-    let expr = ops.reverse().join(" ");
-    return "1 " + expr;
-  } else {
-    return num;
-  }
+    return undefined;
 }
