@@ -1,61 +1,61 @@
-function format(givenDate, formatGiven){
-    let res = String(formatGiven);
-    let date = new Date(givenDate);
+function format(date, str_j){
+    let resultat_j = String(str_j);
+    let date_j = new Date(date);
 
-    if (res.includes("yyyy")){
-        res = res.replace(/yyyy/g, Math.abs(date.getFullYear()).toString().padStart(4, "0"))
+    if (resultat_j.includes("yyyy")){
+        resultat_j = resultat_j.replace(/yyyy/g, Math.abs(date_j.getFullYear()).toString().padStart(4, "0"))
     } else {
-        res = res.replace(/y/g, Math.abs(date.getFullYear()))
+        resultat_j = resultat_j.replace(/y/g, Math.abs(date_j.getFullYear()))
     }
 
 
-    if (res.includes("dd")){
-        res = res.replace(/dd/g, date.getDate().toString().padStart(2, "0"))
+    if (resultat_j.includes("dd")){
+        resultat_j = resultat_j.replace(/dd/g, date_j.getDate().toString().padStart(2, "0"))
     }else {
-        res = res.replace(/d/g, date.getDate().toString())
+        resultat_j = resultat_j.replace(/d/g, date_j.getDate().toString())
     }
-    if (res.includes("hh")){
-        res = res.replace(/hh/g, String(H(date)).padStart(2, "0"))
+    if (resultat_j.includes("hh")){
+        resultat_j = resultat_j.replace(/hh/g, String(H(date_j)).padStart(2, "0"))
     }else{
-        res = res.replace(/h/g, H(date))
+        resultat_j = resultat_j.replace(/h/g, H(date_j))
     }
 
-    if (res.includes("mm")){
-        res = res.replace(/mm/g, date.getMinutes().toString().padStart(2, "0"))
+    if (resultat_j.includes("mm")){
+        resultat_j = resultat_j.replace(/mm/g, date_j.getMinutes().toString().padStart(2, "0"))
     }else {
-        res = res.replace(/m/g, date.getMinutes())
+        resultat_j = resultat_j.replace(/m/g, date_j.getMinutes())
     }
 
-    if (res.includes("MMMM")){
-        res = res.replace(/MMMM/g, monthsLong[date.getMonth()])
-    } else if (res.includes("MMM")){
-         res = res.replace(/MMM/g, months[date.getMonth()])
-    } else if (res.includes("MM")){
-         res = res.replace(/MM/g, (date.getMonth()+1).toString().padStart(2, "0"))
+    if (resultat_j.includes("MMMM")){
+        resultat_j = resultat_j.replace(/MMMM/g, monthsLong[date_j.getMonth()])
+    } else if (resultat_j.includes("MMM")){
+         resultat_j = resultat_j.replace(/MMM/g, months[date_j.getMonth()])
+    } else if (resultat_j.includes("MM")){
+         resultat_j = resultat_j.replace(/MM/g, (date_j.getMonth()+1).toString().padStart(2, "0"))
     } else {
-        res = res.replace(/M/g, (date.getMonth()+1).toString())
+        resultat_j = resultat_j.replace(/M/g, (date_j.getMonth()+1).toString())
     }
 
-    if (res.includes("EEEE")){
-        res = res.replace(/EEEE/g, daysLong[date.getDay()])
+    if (resultat_j.includes("EEEE")){
+        resultat_j = resultat_j.replace(/EEEE/g, daysLong[date_j.getDay()])
     } else {
-        res = res.replace(/E/g, days[date.getDay()])
+        resultat_j = resultat_j.replace(/E/g, days[date_j.getDay()])
     }
 
-    if (formatGiven.includes("a")){
-        res =  res.replace(/a/g, a(date))
+    if (str_j.includes("a")){
+        resultat_j =  resultat_j.replace(/a/g, a(date_j))
     }
-    res = res.replace(/ss/g, date.getSeconds().toString().padStart(2, "0"))
-    res = res.replace(/s/g, date.getSeconds())
+    resultat_j = resultat_j.replace(/ss/g, date_j.getSeconds().toString().padStart(2, "0"))
+    resultat_j = resultat_j.replace(/s/g, date_j.getSeconds())
     
-    res = res.replace(/HH/g, date.getHours().toString().padStart(2, "0"))
-    res = res.replace(/H/g, date.getHours())
+    resultat_j = resultat_j.replace(/HH/g, date_j.getHours().toString().padStart(2, "0"))
+    resultat_j = resultat_j.replace(/H/g, date_j.getHours())
 
-    res = res.replace(/GGGG/g, gggg(date))
-    res = res.replace(/G/g, g(date))
+    resultat_j = resultat_j.replace(/GGGG/g, gggg(date_j))
+    resultat_j = resultat_j.replace(/G/g, g(date_j))
     
 
-    return res
+    return resultat_j
 }
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -63,33 +63,33 @@ const monthsLong = ['January', 'February', 'March', 'April', 'May', 'June', 'Jul
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const daysLong = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-function H(date){
-    var hours = date.getHours();
+function H(date_j){
+    var hours = date_j.getHours();
     return hours%12
 }
 
-function a(date){
-    var hours = date.getHours();
+function a(date_j){
+    var hours = date_j.getHours();
     var ampm = hours >= 12 ? 'PM' : 'AM';
     return ampm
 }
 
-function gggg(date){
-    let res = ""
-    if (date.getFullYear() > 0){
-        res = "Anno Domini"
+function gggg(date_j){
+    let resultat_j = ""
+    if (date_j.getFullYear() > 0){
+        resultat_j = "Anno Domini"
     } else {
-        res = "Before Christ"
+        resultat_j = "Before Christ"
     }
-    return res
+    return resultat_j
 }
 
-function g(date){
-    let res = ""
-    if (date.getFullYear() > 0){
-        res = "AD"
+function g(date_j){
+    let resultat_j = ""
+    if (date_j.getFullYear() > 0){
+        resultat_j = "AD"
     }else {
-        res = "BC"
+        resultat_j = "BC"
     }
-    return res
+    return resultat_j
 }
