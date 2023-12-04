@@ -1,46 +1,57 @@
 function format(givenDate, formatGiven) {
-    const date = new Date(givenDate);
-    const padZero = (num) => num.toString().padStart(2, "0");
+    let res = String(formatGiven);
+    let date = new Date(givenDate);
 
-    const replacements = {
-        yyyy: Math.abs(date.getFullYear()).toString().padStart(4, "0"),
-        y: Math.abs(date.getFullYear()),
-        dd: padZero(date.getDate()),
-        d: date.getDate().toString(),
-        hh: padZero(date.getHours() % 12),
-        h: date.getHours() % 12,
-        mm: padZero(date.getMinutes()),
-        m: date.getMinutes(),
-        MMMM: monthsLong[date.getMonth()],
-        MMM: months[date.getMonth()],
-        MM: padZero(date.getMonth() + 1),
-        M: (date.getMonth() + 1).toString(),
-        EEEE: daysLong[date.getDay()],
-        E: days[date.getDay()],
-        a: a(date),
-        ss: padZero(date.getSeconds()),
-        s: date.getSeconds(),
-        HH: padZero(date.getHours()),
-        GGGG: date.getFullYear() > 0 ? "Anno Domini" : "Before Christ",
-        G: date.getFullYear() > 0 ? "AD" : "BC",
+    const replaceToken = (token, value) => {
+        res = res.replace(new RegExp(token, 'g'), value);
     };
 
-    return formatGiven.replace(/(yyyy|y|dd|d|hh|h|mm|m|MMMM|MMM|MM|M|EEEE|E|a|ss|s|HH|GGGG|G)/g, (match) => replacements[match]);
+    replaceToken(/yyyy/g, Math.abs(date.getFullYear()).toString().padStart(4, '0'));
+    replaceToken(/y/g, Math.abs(date.getFullYear()));
+    replaceToken(/dd/g, date.getDate().toString().padStart(2, '0'));
+    replaceToken(/d/g, date.getDate().toString());
+    replaceToken(/hh/g, String(H(date)).padStart(2, '0'));
+    replaceToken(/h/g, H(date));
+    replaceToken(/mm/g, date.getMinutes().toString().padStart(2, '0'));
+    replaceToken(/m/g, date.getMinutes());
+    replaceToken(/MMMM/g, monthsLong[date.getMonth()]);
+    replaceToken(/MMM/g, months[date.getMonth()]);
+    replaceToken(/MM/g, (date.getMonth() + 1).toString().padStart(2, '0'));
+    replaceToken(/M/g, (date.getMonth() + 1).toString());
+    replaceToken(/EEEE/g, daysLong[date.getDay()]);
+    replaceToken(/E/g, days[date.getDay()]);
+
+    if (formatGiven.includes('a')) {
+        replaceToken(/a/g, a(date));
+    }
+
+    replaceToken(/ss/g, date.getSeconds().toString().padStart(2, '0'));
+    replaceToken(/s/g, date.getSeconds());
+    replaceToken(/HH/g, date.getHours().toString().padStart(2, '0'));
+    replaceToken(/H/g, date.getHours());
+    replaceToken(/GGGG/g, gggg(date));
+    replaceToken(/G/g, g(date));
+
+    return res;
 }
 
-const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const monthsLong = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const daysLong = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const monthsLong = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const daysLong = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+function H(date) {
+    return date.getHours() % 12;
+}
 
 function a(date) {
     return date.getHours() >= 12 ? 'PM' : 'AM';
 }
 
 function gggg(date) {
-    return date.getFullYear() > 0 ? "Anno Domini" : "Before Christ";
+    return date.getFullYear() > 0 ? 'Anno Domini' : 'Before Christ';
 }
 
 function g(date) {
-    return date.getFullYear() > 0 ? "AD" : "BC";
+    return date.getFullYear() > 0 ? 'AD' : 'BC';
 }
