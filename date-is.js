@@ -1,21 +1,19 @@
 function isValid(date) {
-  return !isNaN(date.getTime());
+  return !isNaN(new Date(date).getTime()) && (date instanceof Date || typeof date === "number");
 }
 
-function isAfter(date1, date2) {
-  return date1.getTime() > date2.getTime();
+function isAfter(d1, d2) {
+  return d1 > d2;
 }
 
-function isBefore(date1, date2) {
-  return date1.getTime() < date2.getTime();
+function isBefore(d1, d2) {
+  return d1 < d2;
 }
 
 function isFuture(date) {
-  const now = new Date();
-  return isValid(date) && isAfter(date, now);
+  return isValid(date) && new Date(date).getTime() > Date.now();
 }
 
 function isPast(date) {
-  const now = new Date();
-  return isValid(date) && isBefore(date, now);
+  return isValid(date) && new Date(date).getTime() < Date.now();
 }
