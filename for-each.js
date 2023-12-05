@@ -1,5 +1,5 @@
-const forEach = (array, action) => {
-  if (Array.isArray(array)) {
-    array.forEach((item, i) => action(item, i, array));
+function forEach(array, callback) {
+  for (let i = 0; i < array.length; i++) {
+    callback(array[i], i, array);
   }
-};
+}
