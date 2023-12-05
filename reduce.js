@@ -1,7 +1,29 @@
-const fold = (arr, f, acc) => arr.reduce((acc, item, i) => f(acc, item, i, arr), acc);
+const fold = (arr, f, acc) => {
+    for (var i = 0; i < arr.length; i++) {
+        acc = f(acc, arr[i], i, arr);
+    }
+    return acc;
+}
 
-const foldRight = (arr, f, acc) => arr.reduceRight((acc, item, i) => f(acc, item, i, arr), acc);
+const foldRight = (arr, f, acc) => {
+    for (var i = arr.length - 1; i >= 0; i--) {
+        acc = f(acc, arr[i], i, arr);
+    }
+    return acc;
+}
 
-const reduce = (arr, f) => arr.slice(1).reduce((acc, item, i) => f(acc, item, i + 1, arr), arr[0]);
+const reduce = (arr, f) => {
+    let acc = arr[0];
+    for (var i = 1; i < arr.length; i++) {
+        acc = f(acc, arr[i], i, arr);
+    }
+    return acc;
+}
 
-const reduceRight = (arr, f) => arr.slice(0, -1).reduceRight((acc, item, i) => f(acc, item, i, arr), arr[arr.length - 1]);
+const reduceRight = (arr, f) => {
+    let acc = arr[arr.length - 1];
+    for (var i = arr.length - 2; i >= 0; i--) {
+        acc = f(acc, arr[i], i, arr);
+    }
+    return acc;
+}
