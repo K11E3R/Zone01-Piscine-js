@@ -1,3 +1,14 @@
-const map = (arr, action) => arr.map((item, i) => action(item, i, arr));
+const map = (arr, action) =>  {
+    let res = [];
+    for (let i = 0; i < arr.length; i++) {
+        res.push(action(arr[i], i, arr));
+    }
+    return res;
+}
 
-const flatMap = (arr, action) => arr.flatMap((item, i) => action(item, i, arr));
+const flatMap = (arr, action) => {
+    return arr.reduce(
+        (acc, val, i, arr) => acc.concat(action(val, i, arr)),
+        []
+    );
+}
