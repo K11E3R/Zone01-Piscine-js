@@ -1,13 +1,18 @@
 import { styles } from "./pimp-my-style.data.js";
 
-let counter = 0;
+var counter = 0;
 
 function pimp() {
-    const button = document.querySelector("button.button");
-    if (!button.classList.toggle("unpimp")) {
-        button.classList.add(styles[counter++]);
+    let button = document.querySelector("button.button");
+    if (!button.classList.contains("unpimp")) {
+        button.classList.add(styles[counter]);
+        counter++;
     } else {
-        button.classList.remove(styles[--counter]);
+        counter--;
+        button.classList.remove(styles[counter]);
+        if (counter === 0) {
+            button.classList.toggle("unpimp");
+        }
     }
     if (counter === styles.length) {
         button.classList.toggle("unpimp");
