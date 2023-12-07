@@ -1,4 +1,4 @@
-function createCircle() {
+export function createCircle() {
     document.addEventListener('mousedown', event => {
         const newCirc = document.createElement('div');
         newCirc.className = 'circle';
@@ -10,7 +10,7 @@ function createCircle() {
     });
 }
 
-function moveCircle() {
+export function moveCircle() {
     document.addEventListener('mousemove', event => {
         const lastCircle = document.querySelector('div:last-child');
         lastCircle.style.left = `${event.clientX - 25}px`;
@@ -44,10 +44,8 @@ function moveCircle() {
     });
 }
 
-function setBox() {
+export function setBox() {
     const centerBox = document.createElement('div');
     centerBox.className = 'box';
     document.body.append(centerBox);
 }
-
-export {createCircle, moveCircle, setBox};
