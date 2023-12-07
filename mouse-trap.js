@@ -1,72 +1,48 @@
-export function createCircle() {
-    document.addEventListener('mousedown', event => {
-        const newCirc = document.createElement('div')
-        newCirc.setAttribute('class', 'circle')
-        newCirc.setAttribute('id', 'Tester')
-        let x = event.clientX - 25
-        let y = event.clientY - 25
-        newCirc.setAttribute('style', 'left: ' + x.toString() + 'px; top: ' + y.toString() + 'px; background: white;')
+function createCircle() {
+    document.addEventListener('mousedown', (event) => {
+        const newCirc = document.createElement('div');
+        newCirc.className = 'circle';
+        newCirc.id = 'Tester';
+        const [x, y] = [event.clientX - 25, event.clientY - 25];
+        newCirc.style.cssText = `left: ${x}px; top: ${y}px; background: white;`;
         document.body.appendChild(newCirc);
-    })
+    });
 }
 
-export function moveCircle() {
+function moveCircle() {
+    document.addEventListener('mousemove', (event) => {
+        const lastCircle = document.querySelector('div:last-child');
+        lastCircle.style.cssText = `left: ${event.clientX - 25}px; top: ${event.clientY - 25}px;`;
+        document.body.append(lastCircle);
+        const midBox = document.querySelector('div.box');
+        const dims = midBox.getBoundingClientRect();
 
-
-    document.addEventListener('mousemove', event => {
-        const lastCircle = document.querySelector('div:last-child')
-        lastCircle.style.left = `${event.clientX - 25}px`
-        lastCircle.style.top = `${event.clientY - 25}px`
-        document.body.append(lastCircle)
-        let midBox = document.querySelector('div.box')
-        let dims = midBox.getBoundingClientRect()
-
-
-        if (lastCircle.getAttribute('class') !== 'box') {
-            if ((+lastCircle.style.left.replace('px', '') > (dims.x)) && (+lastCircle.style.left.replace('px', '') < (dims.right - 50)) && (+lastCircle.style.top.replace('px', '') > (dims.top)) && (+lastCircle.style.top.replace('px', '') < (dims.bottom - 50))) {
-                lastCircle.style.background = 'var(--purple)'
-            }
+        if (lastCircle.className !== 'box' && isInsideBox(lastCircle, dims)) {
+            lastCircle.style.background = 'var(--purple)';
         }
 
-        if (event.clientX - 25 < (dims.x) && lastCircle.style.background === 'var(--purple)') {
-            console.log(lastCircle.style.left)
-            lastCircle.style.left = (dims.x).toString() + 'px'
-
-            if (event.clientY - 25 < (dims.top)) {
-                lastCircle.style.top = (dims.y).toString() + 'px'
+        const adjustPosition = (axis, bound) => {
+            const pos = event[axis] - 25;
+            if (lastCircle.style.background === 'var(--purple)') {
+                lastCircle.style[axis] = `${pos < bound ? bound : pos > dims[bound] - 50 ? dims[bound] - 50 : pos}px`;
             }
-            console.log(event.clientY - 25)
-            console.log(dims.bottom)
+        };
 
-            if (event.clientY - 25 > (dims.bottom - 50)) {
-                lastCircle.style.top = (dims.bottom - 50).toString() + 'px'
-            }
-        } else if (event.clientX - 25 > (dims.right - 50) && lastCircle.style.background === 'var(--purple)') {
-            lastCircle.style.left = (dims.right - 50).toString() + 'px'
-
-            if (event.clientY - 25 < (dims.top)) {
-                lastCircle.style.top = (dims.y).toString() + 'px'
-            }
-            console.log(event.clientY - 25)
-            console.log(dims.bottom)
-
-            if (event.clientY - 25 > (dims.bottom - 50)) {
-                lastCircle.style.top = (dims.bottom - 50).toString() + 'px'
-            }
-        } else if ((event.clientY - 25 > (dims.bottom - 50)) && lastCircle.style.background === 'var(--purple)') {
-            lastCircle.style.top = (dims.bottom - 50).toString() + 'px'
-
-        } else if ((event.clientY - 25 < (dims.top)) && lastCircle.style.background === 'var(--purple)') {
-            lastCircle.style.top = (dims.top).toString() + 'px'
-
-        }
-
-    })
-
+        adjustPosition('left', dims.x);
+        adjustPosition('top', dims.top);
+        adjustPosition('top', dims.bottom - 50);
+    });
 }
 
-export function setBox() {
-    const centerBox = document.createElement('div')
-    centerBox.setAttribute('class', 'box')
-    document.body.append(centerBox)
+function setBox() {
+    const centerBox = document.createElement('div');
+    centerBox.className = 'box';
+    document.body.append(centerBox);
 }
+
+function isInsideBox(circle, dims) {
+    const [x, y] = [parseInt(circle.style.left), parseInt(circle.style.top)];
+    return x > dims.x && x < dims.right - 50 && y > dims.top && y < dims.bottom - 50;
+}
+
+export { createCircle, moveCircle, setBox };
