@@ -4,15 +4,12 @@ let counter = 0;
 
 function pimp() {
     const button = document.querySelector("button.button");
-    const isUnpimped = !button.classList.toggle("unpimp");
-
-    if (isUnpimped) {
-        button.classList.remove(styles[--counter]);
-    } else {
+    if (!button.classList.toggle("unpimp")) {
         button.classList.add(styles[counter++]);
+    } else {
+        button.classList.remove(styles[--counter]);
     }
-
-    if (counter === styles.length || counter === 0) {
+    if (counter === styles.length) {
         button.classList.toggle("unpimp");
     }
 }
