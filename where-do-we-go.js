@@ -1,99 +1,80 @@
-import { places } from "./where-do-we-go.data.js"
+import { places } from "./where-do-we-go.data.js";
 
 export function explore() {
-    const orderedPlaces = places.sort((a, b) => {
-        let aCoord = a.coordinates
-        let bCoord = b.coordinates
-        let aDeg = +(aCoord.slice(0, aCoord.indexOf('°')))
-        let bDeg = +(bCoord.slice(0, bCoord.indexOf('°')))
-        let aMin = +(aCoord.slice(aCoord.indexOf('°') + 1, aCoord.indexOf('\'')))
-        let bMin = +(bCoord.slice(bCoord.indexOf('°') + 1, bCoord.indexOf('\'')))
-        let aSec = +(aCoord.slice(aCoord.indexOf('\'') + 1, aCoord.indexOf('\"')))
-        let bSec = +(bCoord.slice(bCoord.indexOf('\'') + 1, bCoord.indexOf('\"')))
-        let aDir = aCoord.split(" ")[0].slice(-1)
-        let bDir = bCoord.split(" ")[0].slice(-1)
+  const orderedPlaces = places.sort(compareCoordinates);
 
-        if (aDir === 'S') {
-            aDeg *= -1
-            aMin *= -1
-            aSec *= -1
-        }
-        if (bDir === 'S') {
-            bDeg *= -1
-            bMin *= -1
-            bSec *= -1
-        }
-        if (aDir != bDir) {
-            return aDir.charCodeAt(0) - bDir.charCodeAt(0)
-        }
-        if (aDeg != bDeg) {
-            return bDeg - aDeg
-        }
-        if (aMin != bMin) {
-            return bMin - aMin
-        }
-        return bSec - aSec
+  const compass = createCompass();
+  let oldValue = 0;
+  let scrolled = false;
 
-    })
+  window.addEventListener('scroll', () => {
+    let newValue = window.pageYOffset;
+    scrolled = true;
+    compass.innerHTML = oldValue < newValue ? 'S' : 'N';
+    oldValue = newValue;
+  });
 
-    const compass = document.createElement('div')
-    compass.className = 'direction'
-    compass.innerHTML = 'N'
-    document.body.append(compass)
+  const locationAnchor = createLocationAnchor(orderedPlaces[0]);
+  document.body.append(locationAnchor);
 
-    let oldValue = 0
-    let newValue = 0
+  createSections(orderedPlaces);
 
-    let scrolled = false
-    window.addEventListener('scroll', (e) => {
-        newValue = window.pageYOffset;
-        scrolled = true
-        if (oldValue < newValue) {
-            compass.innerHTML = 'S'
-        } else {
-            compass.innerHTML = 'N'
-        }
-        oldValue = newValue;
+  let observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting === true) {
+        let val = Math.round(window.scrollY / window.innerHeight);
+        updateLocationAnchor(locationAnchor, orderedPlaces[val]);
+      }
     });
+  }, { threshold: [0.5] });
 
-    const newA = document.createElement('a')
-    newA.className = 'location'
-    newA.innerHTML = `${orderedPlaces[0].name}\n${orderedPlaces[0].coordinates}`
-    newA.style.color = orderedPlaces[0].color
-    newA.href = `https://www.google.com/maps/place/${orderedPlaces[0].coordinates}`
-    newA.target = '_blank'
-    document.body.append(newA)
-
-    for (let i = 0; i < orderedPlaces.length; i++) {
-
-        const newSect = document.createElement('section')
-        newSect.id = i.toString()
-        let imageLoc = orderedPlaces[i].name.toLowerCase().split(',')[0].split(' ').join('-')
-        newSect.style.background = `URL('./where-do-we-go_images/${imageLoc}.jpg')`
-        document.body.append(newSect)
-    }
-
-    let observer = new IntersectionObserver(valChanger => {
-        valChanger.forEach(
-            entry => {
-                if (entry.isIntersecting === true) {
-                    let val = (Math.round(window.scrollY / window.innerHeight))
-                    newA.innerHTML = `${orderedPlaces[val].name}\n${orderedPlaces[val].coordinates}`
-                    newA.style.color = orderedPlaces[val].color
-                    newA.href = `https://www.google.com/maps/place/${orderedPlaces[val].coordinates}`
-                    console.log(newA.href);
-                    console.log('TEST',newA.href.split('%C2%B0')
-                        .join('°')
-                        .split('%22')
-                        .join('"')
-                        .split('%20')
-                        .join(' '));
-                }
-            }
-        )
-    }, { threshold: [0.5] });
-
-    const sections = document.querySelectorAll('section')
-    sections.forEach(section => observer.observe(section))
+  document.querySelectorAll('section').forEach(section => observer.observe(section));
 }
 
+function compareCoordinates(a, b) {
+  const aCoords = getCoords(a.coordinates);
+  const bCoords = getCoords(b.coordinates);
+
+  return aCoords.localeCompare(bCoords);
+}
+
+function getCoords(coordString) {
+  const [deg, min, sec, dir] = coordString.match(/\d+/g).map(Number);
+  const correctedDeg = dir === 'S' ? -deg : deg;
+  return `${correctedDeg}${min}${sec}`;
+}
+
+function createCompass() {
+  const compass = document.createElement('div');
+  compass.className = 'direction';
+  compass.innerHTML = 'N';
+  document.body.append(compass);
+  return compass;
+}
+
+function createLocationAnchor(place) {
+  const locationAnchor = document.createElement('a');
+  locationAnchor.className = 'location';
+  locationAnchor.innerHTML = `${place.name}\n${place.coordinates}`;
+  locationAnchor.style.color = place.color;
+  locationAnchor.href = `https://www.google.com/maps/place/${place.coordinates}`;
+  locationAnchor.target = '_blank';
+  return locationAnchor;
+}
+
+function updateLocationAnchor(anchor, place) {
+  anchor.innerHTML = `${place.name}\n${place.coordinates}`;
+  anchor.style.color = place.color;
+  anchor.href = `https://www.google.com/maps/place/${place.coordinates}`;
+  console.log('TEST', anchor.href.replaceAll('%C2%B0', '°').replaceAll('%22', '"').replaceAll('%20', ' '));
+}
+
+function createSections(places) {
+  places.forEach((place, index) => {
+    const newSection = document.createElement('section');
+    newSection.id = index.toString();
+    const imageLoc = place.name.toLowerCase().split(',')[0].split(' ').join('-');
+    newSection.style.background = `URL('./where-do-we-go_images/${imageLoc}.jpg')`;
+    document.body.append(newSection);
+  });
+}
