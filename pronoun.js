@@ -5,7 +5,7 @@ function pronoun(elem_string) {
     words.forEach((wordP, i) => {
         if (pronouns.includes(wordP)) {
             if (res[wordP] === undefined) {
-                //Find the next word and check it isnt a pronoun
+                // Te => elems_string (spl => elems )
                 let toAdd = words[words.indexOf(wordP) + 1]
                 pronouns.includes(toAdd) ? toAdd = [] : toAdd = [toAdd];
                 if (toAdd[0] === undefined) toAdd = [];
@@ -14,7 +14,7 @@ function pronoun(elem_string) {
                     count: 1
                 };
             } else {
-                //Update the words value
+                // T3 
                 let nexttoAdd = words[(words.indexOf(wordP, i ) + 1)]
                 let currWord = res[wordP].word
                 pronouns.includes(nexttoAdd) ? nexttoAdd = [] : nexttoAdd = [nexttoAdd];
