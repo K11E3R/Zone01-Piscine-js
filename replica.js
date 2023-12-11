@@ -6,7 +6,6 @@ function replica(elem_to, ...elem_from) {
                     Object.prototype.hasOwnProperty.call(elem_to, key) &&
                     Object.prototype.toString.call(elem_to[key]).slice(8, -1) !== 'Object'
                 ) {
-                    // If elem_to[key] is not an object, create a new object
                     elem_to[key] = {};
                 }
 
