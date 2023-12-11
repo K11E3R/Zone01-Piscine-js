@@ -1,20 +1,34 @@
 function neuron(arr) {
-    const res = { questions: {}, orders: {}, affirmations: {} };
+    const res = {};
+
+    const addEntry = (key, statement, response) => {
+        const baseKey = statement.replaceAll(' ', '_').replace(/[?!]/, '').toLowerCase();
+        res[key] ||= {};
+        res[key][baseKey] ||= { [key.slice(0, -1)]: statement, responses: [] };
+        res[key][baseKey].responses.push(response);
+    };
 
     for (const item of arr) {
-        const [type, key, response] = parseItem(item);
+        const [type, ...rest] = item.split(' ');
+        const [statement, response] = parseItem(rest);
 
-        res[type][key] ||= { [type.slice(0, -1)]: key, responses: [] };
-        res[type][key].responses.push(response);
+        if (/questions:/i.test(type)) {
+            addEntry('questions', statement, response);
+        } else if (/orders:/i.test(type)) {
+            addEntry('orders', statement, response);
+        } else if (/affirmations:/i.test(type)) {
+            addEntry('affirmations', statement, response);
+        }
     }
 
     return res;
 }
 
-function parseItem(item) {
-    const [type, ...rest] = item.split(' ');
-    const key = rest.join(' ').split('-')[0].slice(0, -1).replaceAll(' ', '_').toLowerCase();
-    const response = item.includes('-') ? item.split('-')[1].slice(1).trim() : '';
+function parseItem(arr) {
+    const fullText = arr.join(' ');
+    const [statementPart, responsePart] = fullText.split(' - ');
+    const statement = statementPart.trim();
+    const response = responsePart.trim().split(' ').slice(1).join(' ');
 
-    return [type.toLowerCase() + 's', key, response];
+    return [statement, response];
 }
