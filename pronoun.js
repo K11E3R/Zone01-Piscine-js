@@ -1,21 +1,28 @@
 function pronoun(elem_string) {
-  const pronouns = ['i', 'you', 'he', 'she', 'it', 'they', 'we'];
-  const result = {};
-  const words = elem_string.split(/\s+/);
-
-  for (let i = 0; i < words.length; i++) {
-    const word = words[i].toLowerCase();
-    if (pronouns.includes(word)) {
-      if (!result[word]) {
-        result[word] = { word: [], count: 0 };
-      }
-      result[word].count += 1;
-    // t 0
-      if (i + 1 < words.length) {
-        result[word].word.push(words[i + 1]);
-      }
-    }
-  }
-
-  return result;
+    let pronouns = ["i", "you", "he", 'she', "it", 'they', 'we'] //, "I", "You", "He", 'She', "It", 'They', 'We']
+    let res = {};
+    let words = elem_string.toLowerCase().split(/\W/g).filter(x => x !== '');
+    words.forEach((wordP, i) => {
+        if (pronouns.includes(wordP)) {
+            if (res[wordP] === undefined) {
+                //Find the next word and check it isnt a pronoun
+                let toAdd = words[words.indexOf(wordP) + 1]
+                pronouns.includes(toAdd) ? toAdd = [] : toAdd = [toAdd];
+                if (toAdd[0] === undefined) toAdd = [];
+                res[wordP] = {
+                    word: toAdd,
+                    count: 1
+                };
+            } else {
+                //Update the words value
+                let nexttoAdd = words[(words.indexOf(wordP, i ) + 1)]
+                let currWord = res[wordP].word
+                pronouns.includes(nexttoAdd) ? nexttoAdd = [] : nexttoAdd = [nexttoAdd];
+                res[wordP].word = currWord.concat(nexttoAdd)  
+                let currCount = res[wordP].count + 1 
+                res[wordP].count = currCount
+            }
+        }
+    })
+    return res
 }
