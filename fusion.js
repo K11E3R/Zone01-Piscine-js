@@ -1,29 +1,19 @@
-function fusion(obj1, obj2) {
-    const fusioned = {};
+function fusion(a, b) {
+    const result = {};
+    const use = Object.keys(a).length > Object.keys(b).length ? a : b;
 
-    const mergeObjects = (source, target) => {
-        for (const key in source) {
-            if (source.hasOwnProperty(key)) {
-                fusioned[key] = target.hasOwnProperty(key) && is.obj(source[key]) && is.obj(target[key]) ?
-                    mergeObjects(source[key], target[key]) :
-                    is.arr(source[key]) && is.arr(target[key]) ? source[key].concat(target[key]) :
-                    is.num(source[key]) && is.num(target[key]) ? source[key] + target[key] :
-                    is.str(source[key]) && is.str(target[key]) ? source[key] + " " + target[key] :
-                    target[key];
-            }
-        }
-    };
+    Object.keys(use).forEach(key => {
+        const isString = typeof a[key] === 'string' && typeof b[key] === 'string';
+        const isNumber = typeof a[key] === 'number' && typeof b[key] === 'number';
+        const isArray = Array.isArray(a[key]) && Array.isArray(b[key]);
+        const isObject = typeof a[key] === 'object' && typeof b[key] === 'object' && a[key] !== null && b[key] !== null;
 
-    mergeObjects(obj1, fusioned);
-    mergeObjects(obj2, fusioned);
+        result[key] = isArray ? a[key].concat(b[key]) :
+                      isString ? a[key] + ' ' + b[key] :
+                      isNumber ? a[key] + b[key] :
+                      isObject ? fusion(a[key], b[key]) :
+                      b[key] !== undefined ? b[key] : a[key];
+    });
 
-    return fusioned;
+    return result;
 }
-
-const is = {
-    num: n => typeof n === "number",
-    str: n => typeof n === "string",
-    arr: n => Array.isArray(n),
-    obj: n => typeof n === "object" && !is.fun(n) && !is.arr(n) && n !== null,
-    fun: n => typeof n === "function"
-};
