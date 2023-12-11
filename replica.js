@@ -12,6 +12,7 @@ function replica(elem_to, ...elem_from) {
                 if (Object.prototype.toString.call(source[key]).slice(8, -1) === 'Object') {
                     elem_to[key] = elem_to[key] || {};
                     replica(elem_to[key], source[key]);
+                    // test 01
                 } else if (Array.isArray(source[key])) {
                     elem_to[key] = source[key].map(item =>
                         Object.prototype.toString.call(item).slice(8, -1) === 'Object'
