@@ -1,9 +1,4 @@
 const defaultCurry = (a) => (b) => ({ ...a, ...b });
-/*
-function defaultCurry (a){
-    return function (b) => ({...a, ...b});
-}
-*/
 
 const mapCurry = (func) => (obj) => Object.fromEntries(Object.entries(obj).map(([key, value]) => [func([key, value])[0], func([key, value])[1]]));
 
