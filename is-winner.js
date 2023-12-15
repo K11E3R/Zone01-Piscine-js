@@ -1,24 +1,25 @@
 async function isWinner(country) {
     try {
-        const winner = await db.getWinner(country);
-        
-        if (winner === Error('Country Not Found')) {
+        country = await db.getWinner(country);
+        if (country === Error('Country Not Found')) {
             return `${country.name} never was a winner`;
         }
-
-        if (winner.continent !== 'Europe') {
+        if (country.continent !== 'Europe') {
             return `${country.name} is not what we are looking for because of the continent`;
         }
-
-        const results = await db.getResults(winner.id);
-        
-        if (results === Error('Results Not Found') || results.length < 3) {
+        let results = await db.getResults(country.id);
+        if (results === Error('Results Not Found')) {
             return `${country.name} never was a winner`;
         }
-
-        const resultString = results.map(result => `${result.year} winning by ${result.score}`).join(', ');
-
-        return `${country.name} won the FIFA World Cup in ${resultString}`;
+        if (results.length < 3) {
+            return `${country.name} is not what we are looking for because of the number of times it was champion`;
+        }
+        return (
+            `${country.name} won the FIFA World Cup in ` +
+            results.map((result) => result.year).join(', ') +
+            ' winning by ' +
+            results.map((result) => result.score).join(', ')
+        );
     } catch (e) {
         if (e.message === 'Country Not Found') {
             return `${country} never was a winner`;
