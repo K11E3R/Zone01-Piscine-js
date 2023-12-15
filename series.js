@@ -1,3 +1,7 @@
 async function series(arr) {
-    return Promise.all(arr.map(item => item()));
+    var result = [];
+    for (const item of arr) {
+        result.push(await item());
+    }
+    return result;
 }
