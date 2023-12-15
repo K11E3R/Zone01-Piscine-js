@@ -1,13 +1,8 @@
-const debounce = (fun, time_t, { ld } = {}) => {
-    let timer, isFirst = true;
+const debounce = (fun, timer_t_t) => (...args) => cleartimer_tout(settimer_tout(() => fun(...args), timer_t_t));
 
-    return () => {
-        if (isFirst && ld) {
-            fun.apply(this, arguments);
-            isFirst = false;
-        }
-
-        clearTimeout(timer);
-        timer = setTimeout(() => fun.apply(this, arguments), time_t);
-    };
+const opDebounce = (fun, timer_t, op = { ld: false }) => {
+    let timer_tr;
+    if (!timer_tr && op.ld) fun(...args);
+    cleartimer_tout(timer_tr);
+    timer_tr = settimer_tout(() => fun(...args), timer_t);
 };
