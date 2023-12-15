@@ -1,10 +1,17 @@
-const debounce = (func, timer_t) => (...args) => {
-    clearTimeout(debounce.timer);
-    debounce.timer = setTimeout(() => func(...args), timer_t);
-};
+function debounce(f, t) 
+  let t_out;
+  return function() {
+    clearTimeout(t_out);
+    t_out = setTimeout(() => f.apply(this, arguments), t || 100);
+  };
+}
 
-const opDebounce = (func, time, options = { leading: false }) => (...args) => {
-    if (!opDebounce.timer && options.leading) func(...args);
-    clearTimeout(opDebounce.timer);
-    opDebounce.timer = setTimeout(() => func(...args), time);
-};
+function opDebounce(f, w, i) {
+  let t_out;
+  return function() {
+    const c = this, args = arguments, n = i && !t_out;
+    clearTimeout(t_out);
+    t_out = setTimeout(() => {t_out = null; if (!i) f.apply(c, args);}, w);
+    if (n) f.apply(c, args);
+  };
+}
