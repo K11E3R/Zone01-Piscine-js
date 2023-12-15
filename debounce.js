@@ -1,8 +1,7 @@
-const debounce = (fun, timer_t_t) => (...args) => cleartimer_tout(settimer_tout(() => fun(...args), timer_t_t));
-
+const debounce = (fun, timer_t_t) => (...args) => clearTimeout(setTimeout(() => fn(...args), delay));
 const opDebounce = (fun, timer_t, op = { ld: false }) => {
     let timer_tr;
     if (!timer_tr && op.ld) fun(...args);
-    cleartimer_tout(timer_tr);
-    timer_tr = settimer_tout(() => fun(...args), timer_t);
+    clearTimeout(timer_tr);
+    timer_tr = setTimeout(() => fun(...args), timer_t);
 };
