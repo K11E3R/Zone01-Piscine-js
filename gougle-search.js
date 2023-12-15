@@ -1,14 +1,16 @@
-async function queryServers(serverName, q) {
-    const url = `/${serverName}?q=${q}`;
-    const backupUrl = `/${serverName}_backup?q=${q}`;
-    const [res] = await Promise.race([getJSON(url), getJSON(backupUrl)]);
-    return res;
-}
+const queryServers = async (serverName, q) =>
+  await Promise.race([getJSON(`/${serverName}?q=${q}`), getJSON(`/${serverName}_backup?q=${q}`)]);
 
-async function gougleSearch(q) {
-    const timeout = new Promise((resolve) => setTimeout(resolve, 80, Error('timeout')));
-    const [web, image, video] = ['web', 'image', 'video'].map((server) => queryServers(server, q));
-    const res = await Promise.race([timeout, Promise.all([web, image, video])]);
-    if (res instanceof Error) throw res;
-    return { image: res[1], video: res[2], web: res[0] };
-}
+const gougleSearch = async (q) => {
+  const servers = ['web', 'image', 'video'];
+  const timeoutPromise = new Promise((_, reject) => setTimeout(reject, 80, new Error('timeout')));
+  const fastestServers = servers
+    .map((serverName) => queryServers(serverName, q)) // create an array of promises
+    .map(async (promise) => await Promise.race([promise, timeoutPromise]));
+
+  const result = {};
+  for (let i = 0; i < servers.length; i++) {
+    result[servers[i]] = await fastestServers[i];
+  }
+  return result;
+};
