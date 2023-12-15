@@ -5,7 +5,7 @@ const gougleSearch = async (q) => {
   const servers = ['web', 'image', 'video'];
   const timeoutPromise = new Promise((_, reject) => setTimeout(reject, 80, new Error('timeout')));
   const fastestServers = servers
-    .map((serverName) => queryServers(serverName, q)) // create an array of promises
+    .map((serverName) => queryServers(serverName, q)) // (my_collector)
     .map(async (promise) => await Promise.race([promise, timeoutPromise]));
 
   const result = {};
