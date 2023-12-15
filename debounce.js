@@ -1,4 +1,4 @@
-const debounce = (fun, timer, { ld } = {}) => {
+const debounce = (fun, time_t, { ld } = {}) => {
     let timer, isFirst = true;
 
     return () => {
@@ -8,6 +8,6 @@ const debounce = (fun, timer, { ld } = {}) => {
         }
 
         clearTimeout(timer);
-        timer = setTimeout(() => fun.apply(this, arguments), timer);
+        timer = setTimeout(() => fun.apply(this, arguments), time_t);
     };
 };
