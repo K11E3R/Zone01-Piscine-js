@@ -13,6 +13,8 @@ function retry(c = 3, call_back = async () => {}) {
         }
     };
 }
+
+// t_out 
 function timeout(delay = 0, call_back = async () => {}) {
     return async function (...args) {
         const timeout = new Promise((resolve) =>
